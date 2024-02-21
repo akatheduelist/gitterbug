@@ -44,6 +44,9 @@ class Indicator extends PanelMenu.Button {
         this.menu.addMenuItem(item);
 
         const username = "akatheduelist"
+        const date = new Date()
+        const today = date.toISOString().slice(0, 9)
+        console.log(today)
         async function checkStreak(username){
             const response = await fetch(`https://api.github.com/users/${username}/events/public`, {
                 headers: {
@@ -52,11 +55,10 @@ class Indicator extends PanelMenu.Button {
                 }
             })
             const data = await response.json();
-            for(let event of data) {
-                if(event.type = 'PushEvent'){
-                    console.log("Event", event.type)
-                }
-            }
+            const streak = data.filter((event) => 
+                event.type = 'PushEvent' && event.created_at.slice(0, 9) == today
+            )
+            console.log(streak)
             return data
         }
         checkStreak(username)
