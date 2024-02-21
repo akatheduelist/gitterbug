@@ -1,0 +1,8 @@
+{
+  "name": "gitterbug",
+  "description": "Keep track of how many GitHub commits you have today in your taskbar.",
+  "uuid": "gitterbug@example.com",
+  "shell-version": [
+    "45"
+  ]
+}
