@@ -44,28 +44,33 @@ class Indicator extends PanelMenu.Button {
         this.menu.addMenuItem(item);
 
         const username = "akatheduelist"
-        const date = new Date()
-        const today = date.toISOString().slice(0, 9)
-        console.log(today)
         async function checkStreak(username){
-            const response = await fetch(`https://api.github.com/users/${username}/events/public`, {
+            const date = new Date()
+            const today = date.toISOString().slice(0, 9)
+            const response = await fetch(`https://api.github.com/users/${username}/events`, {
                 headers: {
                     "Accept": "application/vnd.github+json",
-                    "X-GitHub-Api-Version": "2022-11-28"
+                    "X-GitHub-Api-Version": "2022-11-28",
                 }
             })
-            const data = await response.json();
-            const streak = data.filter((event) => 
-                event.type = 'PushEvent' && event.created_at.slice(0, 9) == today
-            )
-            console.log(streak)
-            return data
+            if(response.status === 200){
+                const data = await response.json();
+                const streak = await data.filter((event) => 
+                    event.type = 'PushEvent' && event.created_at.slice(0, 9) == today
+                )
+                return streak.length.toString()
+            } else {
+                return `Error ${response.status}`
+            }
         }
-        checkStreak(username)
-        // Change label text every 5 seconds
-        setInterval(() => {
-            this.label.set_text(streak++);
-        }, 50000);
+
+        // Change label text every interval
+        setInterval(async () => {
+            const label = await checkStreak(username)
+            console.log(typeof label)
+            console.log(label)
+            // this.label.set_text(label);
+        }, 6000);
     }
 });
 
